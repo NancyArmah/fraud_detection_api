@@ -1,4 +1,4 @@
-# Fraud Detection API 👮‍♂️🔍
+![image](https://github.com/user-attachments/assets/fee5e78c-c724-45d5-aa6f-d7b5fb913122)# Fraud Detection API 👮‍♂️🔍
 
 A FastAPI-based system to detect fraudulent transactions using rule-based checks. Ideal for proof-of-concept demos.
 
@@ -21,6 +21,16 @@ A FastAPI-based system to detect fraudulent transactions using rule-based checks
 
 2. Create a virtual environment:
    ```bash
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
+   python -m venv venv
+   source venv/bin/activate  # Linux/Mac
+   venv\Scripts\activate     # Windows
+
+3. Install dependencies:
+   ```bash
+   pip install fastapi uvicorn
+
+## Usage
+
+### Start the Server
+```bash
+uvicorn app.main:app --reload
