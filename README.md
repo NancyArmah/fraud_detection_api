@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/fee5e78c-c724-45d5-aa6f-d7b5fb913122)# Fraud Detection API 👮‍♂️🔍
+# Fraud Detection API 👮‍♂️🔍
 
 A FastAPI-based system to detect fraudulent transactions using rule-based checks. Ideal for proof-of-concept demos.
 
