@@ -17,7 +17,7 @@ A FastAPI-based system to detect fraudulent transactions using rule-based checks
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/fraud-detection-api.git
-   cd fraud-detection-api
+   cd fraud-detection-api 
 
 2. Create a virtual environment:
    ```bash
