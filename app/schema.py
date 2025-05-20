@@ -6,3 +6,4 @@ class Transaction(BaseModel):
     user_country: str
     device_id: str
     recipient_account: str
+    hour_of_day: int

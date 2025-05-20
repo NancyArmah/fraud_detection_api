@@ -1,11 +1,16 @@
 # Fraud Detection API 👮‍♂️🔍
 
-A FastAPI-based system to detect fraudulent transactions using rule-based checks. Ideal for proof-of-concept demos.
+A FastAPI-based system to detect fraudulent transactions using a machine learning model trained on synthetic data.
 
 ## Features
-- Rule-based fraud detection (geographic mismatch, transaction velocity, etc.).
-- Mock user profiles and blocklisted recipients.
-- Simple integration with Swagger UI for testing.
+- **Machine Learning Model**: Random Forest classifier for fraud prediction.
+- **Key Features**:
+  - Transaction amount
+  - Geographic mismatch
+  - Device risk score
+  - Recipient account risk
+  - Active hours anomaly
+- **Probability Output**: Returns fraud probability (0-1) and binary flag.
 
 ## Setup
 
@@ -27,7 +32,7 @@ A FastAPI-based system to detect fraudulent transactions using rule-based checks
 
 3. Install dependencies:
    ```bash
-   pip install fastapi uvicorn
+   pip install fastapi uvicorn scikit-learn pandas joblib
 
 ## Usage
 

@@ -1,27 +1,44 @@
 from fastapi import APIRouter
+import pandas as pd
+import joblib
+from datetime import datetime
 from app.schema import Transaction
-from app.mockdb import USER_PROFILES, HIGH_RISK_RECIPIENTS, TRANSACTION_COUNTS
+from app.mockdb import USER_PROFILES, HIGH_RISK_RECIPIENTS
+
+model=joblib.load("fraud_model.joblib")
 
 fraud_dec_router=APIRouter()
 
 @fraud_dec_router.post('/check-fraud')
 async def check_fraud(transaction: Transaction):
-    user_id=transaction.user_id
-    user_profile= USER_PROFILES.get(user_id, {})
+    user_profile=USER_PROFILES.get(transaction.user_id, {})
+    start, end=user_profile.get("active_hours", (0, 23))
+    is_outside=0 if (start <= transaction.hour_of_day <= end) else 1
 
-    triggered_rules={
-        'country_mismatch':user_profile.get('usual_country') != transaction.user_country,
-        'unusual_amount':transaction.amount > 3 * user_profile.get('avg_transaction', 0),
-        'new_account':user_profile.get('account_age_days', 0) < 7,
-        'device_anomaly':transaction.device_id not in user_profile.get('known_devices', []),
-        'risky_recipient':transaction.recipient_account in HIGH_RISK_RECIPIENTS
+    #Prepare features
+    features={
+        "amount":[transaction.amount],
+        "is_outside_active_hours":[is_outside],
+        "hour_of_day":[transaction.hour_of_day],
+        "user_country":[transaction.user_country],
+        "device_id":[transaction.device_id],
+        "recipient_account":[transaction.recipient_account]
+    }
+    
+    #One-hot encode categorical features
+    df=pd.DataFrame(features)
+    df=pd.get_dummies(df, columns=["user_country", "device_id", "recipient_account"])
 
-    } 
+    #Align columns with training data
+    train_colums=model.feature_names_in_
+    for col in train_colums:
+        if col not in df.columns:
+            df[col]=0
 
-    TRANSACTION_COUNTS[user_id]+=1
-    triggered_rules['transaction_velocity']=TRANSACTION_COUNTS[user_id] > 5
+    #Predict
+    fraud_prob=model.predict_proba(df[train_colums])[0][1]
 
     return {
-        'is_fraud': any(triggered_rules.values()),
-        'triggered_rules': triggered_rules
+        'fraud_probability': round(fraud_prob, 2),
+        'is_fraud': bool(fraud_prob > 0.5)        
     }
